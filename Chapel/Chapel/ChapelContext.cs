@@ -1,13 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Chapel.Entity;
 
-
 namespace Chapel
 {
     internal class ChapelContext : DbContext
     {
-        protected readonly IConfiguration Configuration;
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var connetionString = "server=10.10.50.72; port=3306; database=odyssey; user=root; password=123456; Connect Timeout=300";

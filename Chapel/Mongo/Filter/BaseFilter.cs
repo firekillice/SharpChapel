@@ -28,7 +28,8 @@ namespace Mongo.Filter
         /// <param name="val"></param>
         public void Equal<CompareType>(string selector, CompareType val)
         {
-            this.filter = Builders<BsonDocument>.Filter.Eq(selector, val);
+            var addFilter = Builders<BsonDocument>.Filter.Eq(selector, val);
+            this.filter = Builders<BsonDocument>.Filter.And(addFilter, this.filter);
         }
 
         /// <summary>
@@ -38,7 +39,7 @@ namespace Mongo.Filter
         /// <param name="val"></param>
         public void Lt<CompareType>(string selector, CompareType val)
         {
-            this.filter = Builders<BsonDocument>.Filter.Lt(selector, val);
+            this.filter &= Builders<BsonDocument>.Filter.Lt(selector, val);
         }
 
         /// <summary>
@@ -48,7 +49,7 @@ namespace Mongo.Filter
         /// <param name="val"></param>
         public void Lte<CompareType>(string selector, CompareType val)
         {
-            this.filter = Builders<BsonDocument>.Filter.Lte(selector, val);
+            this.filter &= Builders<BsonDocument>.Filter.Lte(selector, val);
         }
 
         /// <summary>
@@ -58,7 +59,7 @@ namespace Mongo.Filter
         /// <param name="val"></param>
         public void Gt<CompareType>(string selector, CompareType val)
         {
-            this.filter = Builders<BsonDocument>.Filter.Gt(selector, val);
+            this.filter &= Builders<BsonDocument>.Filter.Gt(selector, val);
         }
 
         /// <summary>
@@ -68,7 +69,7 @@ namespace Mongo.Filter
         /// <param name="val"></param>
         public void Gte<CompareType>(string selector, CompareType val)
         {
-            this.filter = Builders<BsonDocument>.Filter.Gte(selector, val);
+            this.filter &= Builders<BsonDocument>.Filter.Gte(selector, val);
         }
     }
 }

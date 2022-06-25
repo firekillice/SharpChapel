@@ -2,7 +2,7 @@
 
 namespace Chapel.Entity
 {
-    internal class ContactEntity
+    class ContactEntity
     {
         [Key]
         public int Id { get; set; }
@@ -11,6 +11,7 @@ namespace Chapel.Entity
 
         public string Email { get; set; }
 
+        [Required]
         public string Name { get; set; }
     }
 }

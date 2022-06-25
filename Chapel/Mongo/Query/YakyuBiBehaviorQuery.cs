@@ -3,7 +3,7 @@ namespace Mongo.Query
 {
     internal class YakyuBiBehaviorQuery : QueryBase
     {
-        private readonly string dbNamePrefix = "BQ-Behavior";
+        private string dbNamePrefix = "BQ-Behavior";
         private DateTime start = new DateTime();
         private DateTime end = new DateTime();
         private DateTime current = new DateTime();
@@ -11,6 +11,15 @@ namespace Mongo.Query
         public YakyuBiBehaviorQuery(string connectionString) : base(connectionString)
         {
             this.connectionString = connectionString;
+        }
+
+        /// <summary>
+        /// 修改前缀
+        /// </summary>
+        /// <param name="prefix"></param>
+        public void ChangePrefix(string prefix = "BQ-BI")
+        {
+            this.dbNamePrefix = prefix;
         }
 
         /// <summary>

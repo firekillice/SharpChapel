@@ -2,13 +2,15 @@
 
 namespace Chapel.Entity
 {
-    internal class AuthorEntity
+    class AuthorEntity
     {
         [Key]
-        public int Id { get; set; } = 0;
+        public int Id { get; set; }
 
+        [Required]
         public int AuthorId { get; set; }
 
+        [Required]
         public string AuthorName { get; set; }
     }
 }

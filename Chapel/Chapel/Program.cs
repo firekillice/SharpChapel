@@ -7,14 +7,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddDbContext<ChapelContext>();
+builder.Services.AddDbContext<ChapelContext>(options => builder.Configuration.GetConnectionString("Main"));
+
 var app = builder.Build();
 
 var appcontext = new ChapelContext();
 var author = new AuthorEntity { AuthorName = "Jack" };
 appcontext.Add(author);
 
-/*var contact = new ContactEntity { Email = "Jack@gmail.com" };
+var contact = new ContactEntity { Email = "Jack@gmail.com" };
 appcontext.Add(contact);
 
 var authors = new List<AuthorEntity> {
@@ -22,7 +23,7 @@ var authors = new List<AuthorEntity> {
     new AuthorEntity { AuthorName = "Lucy"  },
     new AuthorEntity { AuthorName = "Hally"  }
 };
-appcontext.AddRange(authors);*/
+appcontext.AddRange(authors);
 appcontext.SaveChanges();
 
 app.UseHttpsRedirection();
