@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using Tower;
+using Tower.Async;
 
 var animalCol = new AnimalCollection();
 animalCol.Add(new Animal(1, 1));
@@ -80,7 +81,9 @@ Console.WriteLine(anonymousValue.Id);
 
 var svcCollection = new MyServiceCollection();
 
-Hosting.FirstView(new string[]{ });
+//new MySynchronizationContext().EqualFirstView();
+//MyCustomizeSynchronizationContext.FirstViewAsync();
+await MySecondSynchronizationContext.FirstView();
 
 Console.ReadKey();
 
