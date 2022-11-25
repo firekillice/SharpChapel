@@ -248,6 +248,114 @@ namespace Mongo
             Console.WriteLine(absPath);
         }
 
+        public static void QueryArenaMatchEnd(long pid, long opponent, string start, string end)
+        {
+            var filePath = "./"
+                + System.Reflection.MethodBase.GetCurrentMethod().Name
+                + "-" + pid.ToString()
+                + "-" + start
+                + "-" + end
+                + ".csv";
+            QueryCases.ClearLogFile(filePath);
+
+            var qb = new YakyuBiBehaviorQuery("mongodb://reader:u123123@104.215.194.129:20001");
+            qb.SetRange(DateTime.Parse(start), DateTime.Parse(end));
+            while (true)
+            {
+                var dbName = qb.GetNextDbName();
+                if (dbName == "")
+                {
+                    break;
+                }
+                Console.WriteLine("handling db " + dbName);
+
+                var collection = qb.PickCollection(dbName, "arena_match_end");
+                var filter = new BaseFilter();
+                filter.Equal("player.Id", pid);
+                //filter.Equal("details.opponentId", opponent);
+                var projection = Builders<BsonDocument>.Projection.Exclude("_id")
+                    .Include("logTime")
+                    .Include("player.Id")
+                    .Include("details");
+                var cursor = qb.Find(collection, filter.GetFilter(), projection);
+
+                foreach (var document in cursor.ToEnumerable())
+                {
+                    var details = document.GetElement("details").Value.AsBsonDocument;
+                    var player = document.GetElement("player").Value.AsBsonDocument;
+
+                    var timeString = document.GetElement("logTime").Value.ToString();
+                    var content = QueryCases.GetDateTime(int.Parse(timeString)).ToString("yyyy-MM-dd hh:mm:ss")
+                        + "\t" + timeString
+                        + "\t" + player.GetElement("Id").Value.ToString()
+                        + "\t" + details.GetElement("opponentId").Value.ToString()
+                        + "\t" + details.GetElement("matchResult").Value.ToString()
+                        + "\t" + details.GetElement("matchWinStar").Value.ToString()
+                        + "\t" + details.GetElement("matchOperateStar").Value.ToString() + "\n";
+                    QueryCases.WriteFile(filePath, content);
+                }
+            }
+            var absPath = Directory.GetCurrentDirectory() + filePath;
+            Console.WriteLine(absPath);
+        }
+
+        public static void QueryActivityTakeReward(string start, string end)
+        {
+            var filePath = "./"
+                + System.Reflection.MethodBase.GetCurrentMethod().Name
+                + "-" + start
+                + "-" + end
+                + ".csv";
+            QueryCases.ClearLogFile(filePath);
+
+            var qb = new LuciferBiBehaviorQuery("mongodb://bi_ro:GnJefJfsVx@101.36.114.49:27017");
+            qb.ChangePrefix();
+            qb.SetRange(DateTime.Parse(start), DateTime.Parse(end));
+            while (true)
+            {
+                var dbName = qb.GetNextDbName();
+                if (dbName == "")
+                {
+                    break;
+                }
+                Console.WriteLine("handling db " + dbName);
+
+                var collection = qb.PickCollection(dbName, "activity_take_reward");
+                var filter = new BaseFilter();
+
+                filter.Equal("details.ActivityType", "HolidaySign");
+                filter.Equal("details.Reward.Days", 2);
+                filter.Equal("details.Reward.Gift.0.Id", "ChaoYiWenMic");
+                var projection = Builders<BsonDocument>.Projection.Exclude("_id")
+                    .Include("logTime")
+                    .Include("logDate")
+                    .Include("player")
+                    .Include("details.Reward");
+                var cursor = qb.Find(collection, filter.GetFilter(), projection);
+
+                foreach (var document in cursor.ToEnumerable())
+                {
+                    var details = document.GetElement("details").Value.AsBsonDocument;
+                    var player = document.GetElement("player").Value.AsBsonDocument;
+                    var reward = details.GetElement("Reward").Value.AsBsonDocument;
+                    var gift = reward.GetElement("Gift").Value.AsBsonArray;
+                    var firstGift = gift[0].AsBsonDocument;
+
+                    var timeString = document.GetElement("logTime").Value.ToString();
+                    var dateString = document.GetElement("logDate").Value.ToString();
+                    var content = dateString + " " + timeString
+                        + "\t" + player.GetElement("Id").Value.ToString()
+                        + "\t" + player.GetElement("Name").Value.ToString()
+                        + "\t" + player.GetElement("ZoneID").Value.ToString()
+                        + "\t" + reward.GetElement("Days").Value.ToString()
+                        + "\t" + firstGift.GetElement("Id").Value.ToString() + "\n";
+                    QueryCases.WriteFile(filePath, content);
+                }
+            }
+            var absPath = Directory.GetCurrentDirectory() + filePath;
+            Console.WriteLine(absPath);
+        }
+
         /// <summary>
         /// 转换时间戳
         /// </summary>
