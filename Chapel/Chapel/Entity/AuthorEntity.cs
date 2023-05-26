@@ -11,6 +11,6 @@ namespace Chapel.Entity
         public int AuthorId { get; set; }
 
         [Required]
-        public string AuthorName { get; set; }
+        public string? AuthorName { get; set; }
     }
 }

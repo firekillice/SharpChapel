@@ -19,8 +19,6 @@ namespace Chapel
         public static void FirstView()
         {
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddSingleton<IBuildNest, Cock>();
-            serviceCollection.AddSingleton<IFlying, Hen>();
             serviceCollection.AddScoped<Animal>();
 
             var serviceProvider = serviceCollection.BuildServiceProvider();

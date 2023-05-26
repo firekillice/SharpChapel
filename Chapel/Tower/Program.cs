@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using Tower;
 using Tower.Async;
+using Tower.Bootstrap;
 
 var animalCol = new AnimalCollection();
 animalCol.Add(new Animal(1, 1));
@@ -83,7 +84,9 @@ var svcCollection = new MyServiceCollection();
 
 //new MySynchronizationContext().EqualFirstView();
 //MyCustomizeSynchronizationContext.FirstViewAsync();
-await MySecondSynchronizationContext.FirstView();
+//await MySecondSynchronizationContext.FirstView();
+
+new MyModule().FirstView();
 
 Console.ReadKey();
 

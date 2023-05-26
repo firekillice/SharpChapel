@@ -356,12 +356,98 @@ namespace Mongo
             Console.WriteLine(absPath);
         }
 
+        public static void ItemAdd(string start, string end)
+        {
+            var filePath = "./"
+                + System.Reflection.MethodBase.GetCurrentMethod().Name
+                + "-" + start
+                + "-" + end
+                + ".csv";
+            QueryCases.ClearLogFile(filePath);
+
+            var qb = new LuciferBiBehaviorQuery("mongodb://bi_ro:GnJefJfsVx@101.36.114.49:27017");
+            qb.ChangePrefix();
+            qb.SetRange(DateTime.Parse(start), DateTime.Parse(end));
+            while (true)
+            {
+                var dbName = qb.GetNextDbName();
+                if (dbName == "")
+                {
+                    break;
+                }
+                Console.WriteLine("handling db " + dbName);
+
+                var collection = qb.PickCollection(dbName, "item_add");
+                var filter = new BaseFilter();
+
+                filter.Equal("details.Id", "RankDrawSS+");
+                var projection = Builders<BsonDocument>.Projection.Exclude("_id")
+                     .Include("logTime")
+                     .Include("player");
+                var cursor = qb.Find(collection, filter.GetFilter(), projection);
+
+                foreach (var document in cursor.ToEnumerable())
+                {
+                    var player = document.GetElement("player").Value.AsBsonDocument;
+                    var content = player.GetElement("Id").Value.ToString() + "\t";
+                    content = content + document.GetElement("logTime").Value.AsString + "\n";
+                    QueryCases.WriteFile(filePath, content);
+                }
+            }
+            var absPath = Directory.GetCurrentDirectory() + filePath;
+            Console.WriteLine(absPath);
+        }
+
+        public static void ItemDecrease(string start, string end)
+        {
+            var filePath = "./"
+                + System.Reflection.MethodBase.GetCurrentMethod().Name
+                + "-" + start
+                + "-" + end
+                + ".csv";
+            QueryCases.ClearLogFile(filePath);
+
+            var qb = new LuciferBiBehaviorQuery("mongodb://bi_ro:GnJefJfsVx@101.36.114.49:27017");
+            qb.ChangePrefix();
+            qb.SetRange(DateTime.Parse(start), DateTime.Parse(end));
+            while (true)
+            {
+                var dbName = qb.GetNextDbName();
+                if (dbName == "")
+                {
+                    break;
+                }
+                Console.WriteLine("handling db " + dbName);
+
+                var collection = qb.PickCollection(dbName, "item_decrease");
+                var filter = new BaseFilter();
+
+                filter.Equal("details.Id", "RankDrawSS+");
+                var projection = Builders<BsonDocument>.Projection.Exclude("_id")
+                    .Include("logTime")
+                    .Include("player")
+                    .Include("TraceId");
+                var cursor = qb.Find(collection, filter.GetFilter(), projection);
+
+                foreach (var document in cursor.ToEnumerable())
+                {
+                    var player = document.GetElement("player").Value.AsBsonDocument;
+                    var content = player.GetElement("Id").Value.ToString() + "\t";
+                    content = content + document.GetElement("logTime").Value.AsString + "\t";
+                    content = content + document.GetElement("TraceId").Value.AsString + "\n";
+                    QueryCases.WriteFile(filePath, content);
+                }
+            }
+            var absPath = Directory.GetCurrentDirectory() + filePath;
+            Console.WriteLine(absPath);
+        }
+
         /// <summary>
         /// 转换时间戳
         /// </summary>
         /// <param name="timeStamp"></param>
         /// <returns></returns>
-        private static DateTime GetDateTime(int timeStamp)//时间戳Timestamp转换成日期
+        public static DateTime GetDateTime(int timeStamp)//时间戳Timestamp转换成日期
         {
             DateTime dtStart = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
             long lTime = ((long)timeStamp * 10000000);
@@ -370,7 +456,7 @@ namespace Mongo
             return targetDt;
         }
 
-        private static void ClearLogFile(string filepath)
+        public static void ClearLogFile(string filepath)
         {
             if (File.Exists(filepath))
             {
@@ -383,7 +469,7 @@ namespace Mongo
         /// </summary>
         /// <param name="filename"></param>
         /// <param name="contents"></param>
-        private static void WriteFile(string filename, string contents)
+        public static void WriteFile(string filename, string contents)
         {
             File.AppendAllText(filename, contents);
         }

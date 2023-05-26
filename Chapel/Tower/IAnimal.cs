@@ -31,28 +31,35 @@ namespace Tower
         public int Volume { set; get; }
 
         public virtual int Fly() { return 1; }
-        public int Life() { return 1; }
        
         public int BuildNest()  { return 1; }
 
-        public abstract int Eat();
-    }
+       
 
-    public class Cock : Chick
-    {
-        public override int Eat()
+        public int Life()
         {
             throw new NotImplementedException();
         }
-        public override int Fly() { return 1; }
     }
 
-    public class Hen : Chick
+    public class Cock 
     {
-        public override int Eat()
+        public int Eat()
         {
-            throw new NotImplementedException();
+            return this.Move();
         }
-        public override int Fly() { return 1; }
+        internal int Move() { return 1; }
     }
+
+
+    public sealed class Jick : Cock
+    {
+        public new int Eat()
+        {
+            var cock = new Cock(); 
+            return cock.Move();
+        }
+    }
+
+    
 }

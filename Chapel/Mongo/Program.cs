@@ -10,7 +10,8 @@ using MongoDB.Driver;
 
 //QueryCases.QueryPvpCoreMatchEnd(6341068275337685789, "2022-6-12", "2022-6-24");
 //QueryCases.QueryLadderMatchStart(6341068275337685789, "2022-6-12", "2022-6-24");
-QueryCases.QueryActivityTakeReward("2022-11-25", "2022-11-25");
+QueryCases.ItemAdd("2022-12-02", "2022-12-02");
+QueryCases.ItemDecrease("2022-12-02", "2022-12-02");
 //QueryCases.QueryLadderMatchEnd(6341068275337685789, "2022-6-12", "2022-6-24");
 
 

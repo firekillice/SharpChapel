@@ -8,19 +8,24 @@ namespace Tower.Async
 {
     public class MyTask
     {
-        public void FirstView()
+        public async void FirstView()
         {
             Task.Run(() => { Console.WriteLine("entrance of my started task"); });
             Task.Factory.StartNew(() => { Console.WriteLine("entrance of my started task factory"); });
+
+            //await Task.Delay(1000);
 
             var vt = new ValueTask().AsTask();
         }
 
         public async Task FirstViewAsync()
         {
+            var i = 40;
+            i++;
+            Console.WriteLine("what a interesting problem.");
             await Task.Factory.StartNew(() => { Console.WriteLine("entrance of my started task factory"); });
-            await HelloTaskAsync();
-            await Hello2TaskAsync();
+            var j = await HelloTaskAsync();
+            await Hello2TaskAsync(j);
         }
 
         public async Task SecondViewAsync()
@@ -31,14 +36,14 @@ namespace Tower.Async
             await Task.CompletedTask;
         }
 
-        public Task HelloTaskAsync()
+        public Task<int> HelloTaskAsync()
         {
-            return new Task(() => { Console.WriteLine("entrance of my unstarted task"); });
+            return Task.FromResult<int>(1);
         }
 
-        public async Task Hello2TaskAsync()
+        public async Task Hello2TaskAsync(int j)
         {
-            await Task.Run(() => { Console.WriteLine("entrance of my direct run task"); });
+            await Task.Run(() => { Console.WriteLine($"entrance of my direct run task {j}"); });
         }
 
         public async ValueTask<int> HelloValueTaskAsync()
@@ -64,6 +69,14 @@ namespace Tower.Async
             else
             {
                 return await Task.FromResult(30);
+            }
+        }
+
+        public async Task RunCircle(string id)
+        {
+            while (1 > 0)
+            {
+                Console.WriteLine();
             }
         }
     }
